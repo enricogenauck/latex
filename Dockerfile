@@ -19,6 +19,12 @@ RUN \
 RUN \
   /usr/local/texlive/2018/bin/x86_64-linux/tlmgr install float && \
   /usr/local/texlive/2018/bin/x86_64-linux/tlmgr install babel-german && \
+  /usr/local/texlive/2018/bin/x86_64-linux/tlmgr install markdown && \
+  /usr/local/texlive/2018/bin/x86_64-linux/tlmgr install fancyvrb && \
+  /usr/local/texlive/2018/bin/x86_64-linux/tlmgr install csvsimple && \
+  /usr/local/texlive/2018/bin/x86_64-linux/tlmgr install pgf && \
+  /usr/local/texlive/2018/bin/x86_64-linux/tlmgr install etoolbox && \
+  /usr/local/texlive/2018/bin/x86_64-linux/tlmgr install paralist && \
   /usr/local/texlive/2018/bin/x86_64-linux/tlmgr install koma-script
 
 ENV PATH="/usr/local/texlive/2018/bin/x86_64-linux:${PATH}"
