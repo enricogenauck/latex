@@ -25,7 +25,8 @@ RUN \
   /usr/local/texlive/2018/bin/x86_64-linux/tlmgr install pgf && \
   /usr/local/texlive/2018/bin/x86_64-linux/tlmgr install etoolbox && \
   /usr/local/texlive/2018/bin/x86_64-linux/tlmgr install paralist && \
-  /usr/local/texlive/2018/bin/x86_64-linux/tlmgr install koma-script
+  /usr/local/texlive/2018/bin/x86_64-linux/tlmgr install koma-script && \
+  /usr/local/texlive/2018/bin/x86_64-linux/tlmgr install latexmk
 
 ENV PATH="/usr/local/texlive/2018/bin/x86_64-linux:${PATH}"
 ENV HOME /data
