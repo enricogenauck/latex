@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+IMAGE="enricogenauck/latex"
+
+docker build --rm -t $IMAGE --quiet . &&
+docker run --rm --volume="$PWD:/src" -it $IMAGE pdflatex $@

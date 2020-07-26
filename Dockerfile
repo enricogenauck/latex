@@ -1,35 +1,47 @@
-FROM ubuntu:18.04
+FROM alpine:3.12.0
 
-RUN \
-  apt-get update --quiet && \
-  apt-get install --quiet --yes build-essential && \
-  apt-get install --quiet --yes wget && \
-  apt-get install --quiet --yes libfontconfig1 && \
-  rm -rf /var/lib/{apt,dpkg,cache,log}/
-
-RUN \
-  wget http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz && \
-  mkdir /install-tl-unx && \
-  tar -xvf install-tl-unx.tar.gz -C /install-tl-unx --strip-components=1 && \
-  echo "selected_scheme scheme-basic" >> /install-tl-unx/texlive.profile && \
-  /install-tl-unx/install-tl -profile /install-tl-unx/texlive.profile && \
-  rm -r /install-tl-unx && \
-  rm install-tl-unx.tar.gz
-
-RUN \
-  /usr/local/texlive/2018/bin/x86_64-linux/tlmgr install float && \
-  /usr/local/texlive/2018/bin/x86_64-linux/tlmgr install babel-german && \
-  /usr/local/texlive/2018/bin/x86_64-linux/tlmgr install markdown && \
-  /usr/local/texlive/2018/bin/x86_64-linux/tlmgr install fancyvrb && \
-  /usr/local/texlive/2018/bin/x86_64-linux/tlmgr install csvsimple && \
-  /usr/local/texlive/2018/bin/x86_64-linux/tlmgr install pgf && \
-  /usr/local/texlive/2018/bin/x86_64-linux/tlmgr install etoolbox && \
-  /usr/local/texlive/2018/bin/x86_64-linux/tlmgr install paralist && \
-  /usr/local/texlive/2018/bin/x86_64-linux/tlmgr install koma-script && \
-  /usr/local/texlive/2018/bin/x86_64-linux/tlmgr install latexmk
-
-ENV PATH="/usr/local/texlive/2018/bin/x86_64-linux:${PATH}"
-ENV HOME /data
+ENV PATH="/usr/local/texlive/2020/bin/x86_64-linuxmusl:${PATH}"
 ENV LC_ALL C.UTF-8
 
-WORKDIR /data
+RUN mkdir /tmp/install-tl-unx
+WORKDIR /tmp/install-tl-unx
+
+# Install runtime dependencies
+RUN apk --no-cache add fontconfig ghostscript
+
+# Install TeX Live 2020 with some basic collections
+RUN apk --no-cache --virtual .build-deps add perl wget xz tar && \
+  wget -nv http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz && \
+  tar --strip-components=1 -xvf install-tl-unx.tar.gz && \
+  echo "selected_scheme scheme-basic" >> texlive.profile && \
+  ./install-tl --profile=texlive.profile && \
+  apk del .build-deps && \
+  cd && rm -rf /tmp/install-tl-unx
+
+
+# # Install additional packages
+RUN apk --no-cache --virtual .build-deps add perl wget && \
+  tlmgr install float && \
+  tlmgr install babel-german && \
+  tlmgr install hyphen-german && \
+  tlmgr install markdown && \
+  tlmgr install fancyvrb && \
+  tlmgr install csvsimple && \
+  tlmgr install pgf && \
+  tlmgr install etoolbox && \
+  tlmgr install paralist && \
+  tlmgr install koma-script && \
+  tlmgr install collection-fontsrecommended && \
+  tlmgr install biblatex && \
+  tlmgr install csquotes && \
+  tlmgr install logreq && \
+  tlmgr install biber && \
+  tlmgr install xetex && \
+  tlmgr install fontspec && \
+  tlmgr install latexmk && \
+  apk del .build-deps
+
+
+RUN mkdir /src
+WORKDIR /src
+VOLUME /src

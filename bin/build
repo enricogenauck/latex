@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+# Supply custom tag via "build TAG_NAME"
+# otherwise the latest git commit sha1 is used
+
+TAG=${1:-`git log -1 --format=%h`}
+
+docker build --rm -t enricogenauck/latex:$TAG \
+                  -t enricogenauck/latex .
