@@ -7,10 +7,10 @@ RUN mkdir /tmp/install-tl-unx
 WORKDIR /tmp/install-tl-unx
 
 # Install runtime dependencies
-RUN apk --no-cache add fontconfig ghostscript
+RUN apk --no-cache add fontconfig ghostscript perl
 
 # Install TeX Live 2020 with some basic collections
-RUN apk --no-cache --virtual .build-deps add perl wget xz tar && \
+RUN apk --no-cache --virtual .build-deps add wget xz tar && \
   wget -nv http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz && \
   tar --strip-components=1 -xvf install-tl-unx.tar.gz && \
   echo "selected_scheme scheme-basic" >> texlive.profile && \
@@ -20,7 +20,7 @@ RUN apk --no-cache --virtual .build-deps add perl wget xz tar && \
 
 
 # # Install additional packages
-RUN apk --no-cache --virtual .build-deps add perl wget && \
+RUN apk --no-cache --virtual .build-deps add wget && \
   tlmgr install float && \
   tlmgr install babel-german && \
   tlmgr install hyphen-german && \
